@@ -1,0 +1,10 @@
+canvas{
+    background-color: black;
+}
+
+.score-counter{
+    display: flex;
+    justify-content: space-between;
+}
+
+

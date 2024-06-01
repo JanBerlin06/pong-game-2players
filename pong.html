@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>Pong Game</title>
+</head>
+<body>
+
+    <div class="score-counter">
+        <p class="score">Player 1: <span id="scoreP1">0</span></p>
+        <p class="score">Player 2: <span id="scoreP2">0</span></p>
+    </div>
+
+<canvas id="ca" width="720" height="480"></canvas>
+
+<script>
+
+    let ca = document.getElementById('ca');
+    let ctx = ca.getContext("2d");
+    // Player1 Koordinaten
+    let p1X = 10;
+    let p1Y = 200;
+    // Player2 Koordinaten
+    let p2X = 700;
+    let p2Y = 200;
+
+    // Speichern der gedrückten Tasten
+    let key = {};
+    // X-, Y-Position & Geschwindigkeit
+    let ball = {
+        x: 360,
+        y: 240,
+        speedX: 5,
+        speedY: 0
+    };
+
+    const scoreP1Element = document.getElementById('scoreP1');
+    const scoreP2Element = document.getElementById('scoreP2');
+    let scoreP1 = 0;
+    let scoreP2 = 0;
+
+    // EventListener für Tasten
+    window.addEventListener('keydown', e => key[e.key] = true);
+    window.addEventListener('keyup', e => key[e.key] = false);
+
+    draw();
+    // 60-mal pro Sekunde ausführen
+    setInterval(loop, 1000 / 60);
+    // Elemente auf dem Canvas zeichnen
+    function draw() {
+
+        // Canvas Hintergrund Farbe
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, 720, 480);
+
+
+
+        // Immer weiß "übermalen" damit es aussieht wie ein bewegender Ball
+        ctx.fillStyle = 'white';
+        // fillRect(x, y, width, height)
+        // linker Spieler - p1
+        ctx.fillRect(p1X, p1Y, 10, 80);
+        // rechter Spieler - p2
+        ctx.fillRect(p2X, p2Y, 10, 80);
+        // Ball
+        ctx.fillRect(ball.x, ball.y, 10, 10);
+        // Nächsten Frame anfordern
+        requestAnimationFrame(draw);
+    }
+
+    function loop() {
+        // Bewegung der Spieler unter Berücksichtigung der Grenzen des Canvas
+        if (key['ArrowUp'] && p2Y > 0) {
+            p2Y -= 10;
+        }
+        if (key['ArrowDown'] && p2Y < 400) { // 400 = canvas height (480) - paddle height (80)
+            p2Y += 10;
+        }
+        if (key['w'] && p1Y > 0) {
+            p1Y -= 10;
+        }
+        if (key['s'] && p1Y < 400) { // 400 = canvas height (480) - paddle height (80)
+            p1Y += 10;
+        }
+
+        ball.x += ball.speedX;
+        ball.y += ball.speedY;
+
+        // Logik für Abprallen des Balls, wenn p1 oder p2 berührt werden
+        if (ball.x < 20) {
+            if (ball.y > p1Y && ball.y < p1Y + 80) {
+                ball.speedX = -ball.speedX;
+                ball.speedY = (ball.y - p1Y - 40) * 0.1;
+            }
+        }
+
+        if (ball.x > 690) {
+            if (ball.y > p2Y && ball.y < p2Y + 80) {
+                ball.speedX = -ball.speedX;
+                ball.speedY = (ball.y - p2Y - 40) * 0.1;
+            }
+        }
+
+        // Logik für Abprallen des Balls an den oberen und unteren Rändern
+        if (ball.y < 0 || ball.y > 470) {
+            ball.speedY = -ball.speedY;
+        }
+
+        // Logik für Score Counter
+        if (ball.x < 0) {
+            scoreP2++;
+            updateScore();
+            resetBall();
+        } else if (ball.x > 720) {
+            scoreP1++;
+            updateScore();
+            resetBall();
+        }
+
+
+    }
+
+    // updatet den score
+    function updateScore() {
+        scoreP1Element.innerHTML = scoreP1.toString();
+        scoreP2Element.innerHTML = scoreP2.toString();
+    }
+
+    // setzt den Ball wieder auf Anfangspunkt
+    function resetBall() {
+        ball = {
+            x: 360,
+            y: 240,
+            speedX: ball.speedX < 0 ? 5 : -5,
+            speedY: 0
+        };
+
+    }
+</script>
+</body>
+</html>
