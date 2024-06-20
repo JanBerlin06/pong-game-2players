@@ -1,6 +1,10 @@
 # Pong Game
 This is a simple Pong game implemented in HTML, CSS, and JavaScript.
 
+<img width="1004" alt="Bildschirmfoto 2024-06-20 um 23 03 09" src="https://github.com/JanBerlin06/pong-game-2players/assets/122086059/96c9a273-746b-4d1e-9869-cb8b0499580e">
+
+
+
 ## Description
 This project is a basic implementation of the classic Pong game. 
 Players can control paddles to hit a moving ball. 
